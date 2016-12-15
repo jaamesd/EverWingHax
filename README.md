@@ -1,5 +1,6 @@
 # EverWing Hax
 EverWing Hax is a Python 3 cheat script that automates the grind so you don't have to! It does the following:
+
 1. Unlocks all the Characters
 2. Brings to max level, all those characters
 3. Buys you a rediculious ammount of dragons
