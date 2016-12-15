@@ -222,7 +222,6 @@ def evolve_sidekicks(cull_unevolved = False):
         and get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")]
     print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks")
     while (len(evolution_candidates)):
-        print(" ... ", end = "", flush = True)
         event = {"k": get_func_key("player_key")}
         match_target = evolution_candidates[0]
         evolution_candidates.remove(match_target)
@@ -234,14 +233,16 @@ def evolve_sidekicks(cull_unevolved = False):
 
         if ideal_match:
             evolution_candidates.remove(ideal_match)
-            print("Success, Combining")
+            print("Match found, Combining")
             event["l"] = get_func_key("listing_fuse_dragon_zodiac_bonus")
             event["sidekick1"] = match_target["key"]
             event["sidekick2"] = ideal_match["key"]
         elif cull_unevolved:
-            print("Failure, Deleting")
+            print("No match, Deleting")
             event["l"] = get_func_key("listing_sell_dragon")
             event["sidekick"] = match_target["key"]
+        else:
+            print("No match, Skipping")
         submit_event(event)
 
 def equip_sidekicks(new_left, new_right):
