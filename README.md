@@ -20,7 +20,7 @@
 
 #Instructions
 
-0. If you don't already have Python 3, [get it here](https://www.python.org/downloads/). This script won't work with python 2.
+0. If you don't already have Python 3.3+, [get it here](https://www.python.org/downloads/). This script won't work with python 2.
 1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file.
 2.  Open Google Chrome (desktop)
 3.  In Chrome, open a messenger. Do not start the game yet.
