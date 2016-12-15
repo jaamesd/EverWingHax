@@ -215,7 +215,7 @@ def level_up_sidekicks():
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_gamess(1)
 
-def evolve_sidekicks(cull_unevolved = False):
+def evolve_sidekicks(cull_extra = False):
     sidekicks = get_item_class("sidekick")
     evolution_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
@@ -237,14 +237,33 @@ def evolve_sidekicks(cull_unevolved = False):
             event["l"] = get_func_key("listing_fuse_dragon_zodiac_bonus")
             event["sidekick1"] = match_target["key"]
             event["sidekick2"] = ideal_match["key"]
-        elif cull_unevolved:
+        elif cull_extra:
             print("No match, Deleting")
             event["l"] = get_func_key("listing_sell_dragon")
             event["sidekick"] = match_target["key"]
         else:
             print("No match, Skipping")
-            return
+            continue
         submit_event(event)
+
+    if cull_extra:
+        deletion_candidates = [sidekick for sidekick in sidekicks
+        if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
+        and get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
+        num_deletion_candidates = len(deletion_candidates)
+        print("Attempting to Cull " + str(num_deletion_candidates) + " of " + str(len(sidekicks)) + " subpar sidekicks")
+        event = {"k": get_func_key("player_key")}
+        event["l"] = get_func_key("listing_sell_dragon")
+        while (len(evolution_candidates)):
+            match_target = evolution_candidates[0]
+            evolution_candidates.remove(match_target)
+            event["sidekick"] = match_target["key"]
+            submit_event(event)
+            if len(num_deletion_candidates) <= 40:
+                print(".", end = "", flush = True)
+            elif len(evolution_candidates) % 2:
+                print(":", end = "", flush = True)
+
 
 def equip_sidekicks(new_left, new_right):
     sidekicks = get_item_class("sidekick")
