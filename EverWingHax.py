@@ -1,4 +1,4 @@
-#! /usr/local/bin/python3
+#! /usr/bin/env python3
 import urllib.request, urllib.parse, json, codecs, math
 from pprint import pprint
 
