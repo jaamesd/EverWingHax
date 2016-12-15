@@ -48,7 +48,9 @@ INSTRUCTIONS
     aquire_characters()
     acquire_sidekicks()
     exit_tutorial()
-    print("\nFINISHING\n")
+    print("\nHAX FINISHED\n")
+
+    print("Refresh page or play another round to see results in game.")
     return 0
 
 def default_inventory():
@@ -89,16 +91,18 @@ def submit_event(query_data):
     response = None
     query_url = query_endpoint + urllib.parse.urlencode(query_data)
     try:
-        response = json.loads(urllib.request.urlopen(query_url).read().decode('utf-8'))
+        response = json.loads(urllib.request.urlopen(query_url).read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         print(str(e))
+        response = e.read().decode("utf-8")
+
         error = True
 
     if error or "error" in response:
         print("ERROR on query:")
         print(query_url)
-        pprint(query_data)
-        pprint(response)
+        # pprint(query_data)
+        print(response)
     else:
         if "wallet" in response:
             world["player"]["wallet"] = response["wallet"]
@@ -172,9 +176,13 @@ def acquire_sidekicks():
         aquire_dragons("rare", 13)
         aquire_dragons("legendary", 8)
 
+        level_up_sidekicks()
+        evolve_sidekicks(False)
+
     for i in range (0, 3):
         level_up_sidekicks()
-        evolve_sidekicks()
+        evolve_sidekicks(True)
+
     print("\nSIDEKICKS AQUIRED\n\n")
 
 def aquire_eggs(rarity, num_eggs):
@@ -204,36 +212,33 @@ def level_up_sidekicks():
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_gamess(1)
 
-def evolve_sidekicks():
+def evolve_sidekicks(cull_unevolved = False):
     sidekicks = get_item_class("sidekick")
     evolution_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
         and get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")]
     print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks")
     while (len(evolution_candidates)):
-        print(" ... ", end = "")
+        print(" ... ", end = "", flush = True)
+        event = {"k": get_func_key("player_key")}
         match_target = evolution_candidates[0]
-        del evolution_candidates[0]
+        evolution_candidates.remove(match_target)
 
         ideal_match = next((sidekick for sidekick in evolution_candidates
             if sidekick["model"] == match_target["model"]
             and get_stat(sidekick, "maturity", "value") == get_stat(match_target, "maturity", "value")
             and get_stat(sidekick, "zodiac", "value") == get_stat(match_target, "zodiac", "value")), None)
 
-        event = {"k": get_func_key("player_key")}
         if ideal_match:
+            evolution_candidates.remove(ideal_match)
+            print("Success, Combining")
             event["l"] = get_func_key("listing_fuse_dragon_zodiac_bonus")
             event["sidekick1"] = match_target["key"]
             event["sidekick2"] = ideal_match["key"]
-            del evolution_candidates[match_target]
-            del evolution_candidates[ideal_match]
-            print("Success, Combining")
-        else:
-            pass
+        elif cull_unevolved:
+            print("Failure, Deleting")
             event["l"] = get_func_key("listing_sell_dragon")
             event["sidekick"] = match_target["key"]
-            del evolution_candidates[match_target]
-            print("Failure, Deleting")
         submit_event(event)
 
 def equip_sidekicks(new_left, new_right):
