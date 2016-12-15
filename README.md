@@ -9,7 +9,7 @@
                                                       by andromeduck
 ```
 
-#What it'll do for you
+#What it does
 1. Unlock all the Characters
 2. Upgrade all the Charcaters to max level
 3. Farm you a rediculious ammount of gold
