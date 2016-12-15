@@ -302,10 +302,8 @@ def submit_event(query_data):
         error = True
 
     if error or "error" in response:
-        print("ERROR on query:")
-        print(query_url)
-        # pprint(query_data)
-        print(response)
+        print("ERROR on query: ", query_url)
+        print(response["message"])
     else:
         if "wallet" in response:
             world["player"]["wallet"] = response["wallet"]
