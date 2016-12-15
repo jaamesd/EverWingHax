@@ -5,6 +5,12 @@ import codecs
 import json
 import math
 import pprint
+import sys
+
+
+if sys.version_info[0] < 3 or sys.version_info[1] < 3:
+    print("Please run this script with Python 3.3+")
+    exit(1)
 
 
 def main():
