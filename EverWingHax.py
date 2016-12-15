@@ -44,6 +44,13 @@ INSTRUCTIONS
         print("Invalid input")
         print(str(error))
         return 1
+    evolve_sidekicks()
+    evolve_sidekicks()
+    evolve_sidekicks()
+    evolve_sidekicks()
+    evolve_sidekicks()
+    evolve_sidekicks()
+    evolve_sidekicks()
 
     aquire_characters()
     acquire_sidekicks()
