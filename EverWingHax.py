@@ -243,6 +243,7 @@ def evolve_sidekicks(cull_unevolved = False):
             event["sidekick"] = match_target["key"]
         else:
             print("No match, Skipping")
+            return
         submit_event(event)
 
 def equip_sidekicks(new_left, new_right):
