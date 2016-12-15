@@ -191,7 +191,7 @@ def aquire_eggs(rarity, num_eggs):
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0,num_eggs):
         submit_event(event)
-        if num_games <= 40:
+        if num_eggs <= 40:
             print(".", end = "", flush = True)
         elif i % 2:
             print(":", end = "", flush = True)
