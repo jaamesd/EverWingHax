@@ -25,7 +25,7 @@ INSTRUCTIONS
       \"stormcloud-146919.appspot.com/auth/login/?uid=\"
   6.  In Developer Tools -> Network, right click the entry under Name and select
       Copy -> Copy Link Address, it should start with \"?uid=\"
-  7.  Paste below
+  7.  Paste it below
     """)
 
     # For testing:
@@ -37,7 +37,7 @@ INSTRUCTIONS
     query_endpoint = "https://stormcloud-146919.appspot.com/purchase/listing/?"
 
     try:
-        print("\nSTARTING\n")
+        print("\n\nSTARTING HAX\n")
         global world
         world = json.loads(urllib.request.urlopen(profile_url).read().decode('utf-8'))
     except Exception as error:
@@ -45,12 +45,9 @@ INSTRUCTIONS
         print(str(error))
         return 1
 
-    print("TEST\n")
-    complete_gamess(1)
-    print("")
     aquire_characters()
     acquire_sidekicks()
-    # exit_tutorial()
+    exit_tutorial()
     print("\nFINISHING\n")
     return 0
 
@@ -61,15 +58,17 @@ def default_inventory():
 
 # no idea if this works
 def exit_tutorial():
-    print("\nEXITING TUTORIAL\n")
     if (get_item_class("token:tutorialComplete")):
         return
+    print("\nEXITING TUTORIAL\n")
     characters = get_item_class("character")
     curr_character = next(character for character in characters if character["state"] == "equipped")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_tutorial_lvl5")
     event["character"] = curr_character["key"]
     submit_event(event)
+    print("\nTUTORIAL EXITED\n")
+
 
 def get_func_key(key_name):
     if key_name == "player_key":
@@ -100,7 +99,6 @@ def submit_event(query_data):
         print(query_url)
         pprint(query_data)
         pprint(response)
-        exit(1)
     else:
         if "wallet" in response:
             world["player"]["wallet"] = response["wallet"]
@@ -127,7 +125,7 @@ def aquire_characters():
             submit_event(event)
             print(".", end = "", flush = True)
         print(" DONE")
-    print("\nCHARACTERS AQUIRED\n")
+    print("\nCHARACTERS AQUIRED\n\n")
 
 def equip_character(character):
     character_name = character["model"].replace("character:", "")
@@ -163,47 +161,40 @@ def equip_character(character):
 def acquire_sidekicks():
     print("\nAQUIRING SIDEKICKS\n")
     print("Unlocking a ton of dragons")
-    event = {"k": get_func_key("player_key")}
     for i in range(0,20):
-        event = {"k": get_func_key("player_key")}
-        complete_gamess(10)
-        print("unlocking 10 comon eggs" , end = " ")
-        event["l"] = get_func_key("listing_common_dragon_egg")
-        for j in range(0, 9):
-            submit_event(event)
-            print(".", end = "", flush = True)
-        print(" DONE")
-        print("unlocking 80 epic eggs" , end = " ")
-        event["l"] = get_func_key("listing_epic_dragon_egg")
-        for j in range(0, 40):
-            submit_event(event)
-            submit_event(event)
-            print(".", end = "", flush = True)
-        print(" DONE")
-    print("    acquiring 200 common " , end = "")
-    event["l"] = get_func_key("common_dragon")
-    for i in range(0, 200):
-        submit_event(event)
-        if i % 1 == 0: print(".", end = "", flush = True)
-    print(" DONE")
+        complete_gamess(100)
 
-    print("    acquiring 200 rare " , end = "")
-    event["l"] = get_func_key("rare_dragon")
-    for i in range(0, 200):
-        submit_event(event)
-        if i % 1 == 0: print(".", end = "", flush = True)
-    print(" DONE")
-    print("    acquiring 200 legendary " , end = "")
-    event["l"] = get_func_key("legendary_dragon")
-    for i in range(0, 200):
-        submit_event(event)
-        if i % 1 == 0: print(".", end = "", flush = True)
-    print(" DONE")
+        aquire_eggs("common", 9)
+        aquire_dragons("common", 7)
+        aquire_dragons("rare", 2)
+
+        aquire_eggs("epic", 80)
+        aquire_dragons("rare", 13)
+        aquire_dragons("legendary", 8)
 
     for i in range (0, 3):
         level_up_sidekicks()
         evolve_sidekicks()
-    print("\nSIDEKICKS AQUIRED \n")
+    print("\nSIDEKICKS AQUIRED\n\n")
+
+def aquire_eggs(rarity, num_eggs):
+    print("unlocking " + str(num_eggs) + " " + rarity +" eggs " , end = "")
+    event = {"k": get_func_key("player_key")}
+    event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
+    for i in range(0,num_eggs):
+        submit_event(event)
+        print(".", end = "", flush = True)
+    print(" DONE")
+
+def aquire_dragons(rarity, num_dragons):
+    print("acquiring " + str(num_dragons) + " " + rarity  + " dragons" , end = "")
+    event = {"k": get_func_key("player_key")}
+    event["l"] = get_func_key(rarity + "_dragon")
+    for j in range(0, num_dragons):
+        submit_event(event)
+        print(".", end = "", flush = True)
+    print(" DONE")
+
 
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
@@ -295,7 +286,10 @@ def complete_gamess(num_games = 1):
 
     for i in range (0, num_games):
         submit_event(event)
-        print(".", end = "", flush = True)
+        if num_games <= 40:
+            print(".", end = "", flush = True)
+        elif i % 2:
+            print(":", end = "", flush = True)
     print(" DONE")
 
 if __name__ == "__main__": main()
