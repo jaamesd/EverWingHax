@@ -322,7 +322,10 @@ def submit_event(query_data, update_world=True):
 
     if "error" in response:
         print("ERROR on query: ", query_url)
-        print(response["message"])
+        if type(response) == type({}):
+            print(response["message"])
+        else:
+            print(response)
     elif update_world:
         response = json.loads(response)
         if "wallet" in response:
