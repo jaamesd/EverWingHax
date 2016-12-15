@@ -27,8 +27,8 @@
 4.  In Chrome, Open Devloper Tools by clicking Menu -> More Tools -> Developer Tools.
 5.  In Chrome Developer Tools, click Network and then the Filter button in the top left hand corner.
 6.  In Chrome Developer Tools, paste the following without quotes into the Filter box:
-    \"stormcloud-146919.appspot.com/auth/\"
-7.  In Chrome Developer Tools, right click the entry under Name and select Copy -> Copy Link Address, it should start with \"?uid=\" followed by a bunch of numbers.
+    "stormcloud-146919.appspot.com/auth/"
+7.  In Chrome Developer Tools, right click the entry under Name and select Copy -> Copy Link Address, it should start with "?uid=" followed by a bunch of numbers. See screenshow below for example.
 8.  Navigate to where you downloaded EverWingHax.py and double click to run it.
 9.  When prompted, paste in the URL you copied in Step 7 then press enter.
 10. Wait for the hack it to finish. It takes a while but hey you can still play the game while it's doing its thing. Hey, still beats grinding right? ;)
