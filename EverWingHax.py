@@ -46,8 +46,11 @@ INSTRUCTIONS
         return 1
 
     aquire_characters()
+
     acquire_sidekicks()
+
     exit_tutorial()
+
     print("\nHAX FINISHED\n")
 
     print("Refresh page or play another round to see results in game.")
@@ -290,18 +293,14 @@ def get_stat(item, name, field):
 
 
 def submit_event(query_data):
-    error = False
-    response = None
-    query_url = query_endpoint + urllib.parse.urlencode(query_data)
     try:
+        query_url = query_endpoint + urllib.parse.urlencode(query_data)
         response = json.loads(urllib.request.urlopen(query_url).read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         print(str(e))
         response = e.read().decode("utf-8")
 
-        error = True
-
-    if error or "error" in response:
+    if "error" in response:
         print("ERROR on query: ", query_url)
         print(response["message"])
     else:
