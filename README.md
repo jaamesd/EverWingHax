@@ -1,18 +1,34 @@
-# EverWing Hax
-EverWing Hax is a Python 3 cheat script that automates the grind so you don't have to! It does the following:
+```
 
-1. Unlocks all the Characters
-2. Brings to max level, all those characters
-3. Buys you a rediculious ammount of dragons
-4. Trains and evolves thos dragons perfectly
-5. Kills the tutorial for you
 
-It does not yet:
-* have a GUI
-* deal with quests
-* support Python 2
+       ____|             \ \        /_)               |   |
+       __|\ \   / _ \  __|\ \  \   /  | __ \   _` |   |   |  _` |\ \  /
+       |   \ \ /  __/ |    \ \  \ /   | |   | (   |   ___ | (   | `  <
+     _____|\_/ \___|_|     \_/\_`/   _|_|  _|\__, |  _|  _|\__,_| _/\_\
+                                             |___/
+                                                      by andromeduck
+```
 
-Instructions:
-1. Make sure you have Python 3 installed.
-2. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file.
-3. Run it an follow the instructions inside.
+#What it'll do for you
+1. Unlock all the Characters
+2. Upgrade all the Charcaters to max level
+3. Farm you a rediculious ammount of gold
+3. Buy you a ridiculous ammount of dragons
+4. Perfectly train and combine dragons for you
+5. Kill the tutorial if you haven't already
+
+
+#Instructions
+
+0. If you don't already have python, [get it here](https://www.python.org/downloads/) sure you have Python 3 installed. This script won't work with python 2.
+1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file.
+2.  Open Google Chrome (desktop)
+3.  In Chrome, open a messenger. Do not start the game yet.
+4.  In Chrome, Open the Devloper Tools by clicking Menu -> More Tools -> Developer Tools.
+5.  In Chrome Developer Tools, click Network and then the Filter button in the top left hand corner.
+6.  In Chrome Developer Tools, paste the following without quotes into the text box that says Filter:
+    \"stormcloud-146919.appspot.com/auth/login/?uid=\"
+7.  In Chrome Developer Tools, right click the entry under Name and select Copy -> Copy Link Address, it should start with \"?uid=\" followed by a bunch of numbers.
+8.  Navigate to where you downloaded EverWingHax.py and run it by dobule clicking on it.
+9.  When prompted, paste in the URL you got in Step 7 then press enter
+10. Wait for it to finish. It takes a while but hey, at least it still beats grinding right?
