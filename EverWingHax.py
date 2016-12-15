@@ -22,7 +22,7 @@ INSTRUCTIONS
   4. In Chrome Developer Tools, click Network and then the Filter button in
      the top left hand corner.
   5. In Chrome Developer Tools, paste the following without quotes into the
-     text box that says Filter: \"stormcloud-146919.appspot.com/auth/\"
+     Filter box on the upper left: \"stormcloud-146919.appspot.com/auth/\"
   6. In Chrome Developer Tools, right click the new entry under Name and select
      Copy > Copy Link Address. It begins with \"?uid=\" followed by numbers.
   7. Paste it in the prompt below.
@@ -53,63 +53,6 @@ INSTRUCTIONS
     print("Refresh page or play another round to see results in game.")
     return 0
 
-def default_inventory():
-    event = {"k": get_func_key("player_key")}
-    event["l"] = get_func_key("listing_default_inventory")
-    submit_event(event)
-
-# no idea if this works
-def exit_tutorial():
-    if (get_item_class("token:tutorialComplete")):
-        return
-    print("\nEXITING TUTORIAL\n")
-    characters = get_item_class("character")
-    curr_character = next(character for character in characters if character["state"] == "equipped")
-    event = {"k": get_func_key("player_key")}
-    event["l"] = get_func_key("listing_tutorial_lvl5")
-    event["character"] = curr_character["key"]
-    submit_event(event)
-    print("\nTUTORIAL EXITED\n")
-
-
-def get_func_key(key_name):
-    if key_name == "player_key":
-        return world["player"]["key"]
-    elif key_name  == "item_global":
-        return next(item["key"] for item in world["player"]["inventory"] if item["model"] == "item_global")
-    else:
-        return next(item["key"] for item in world["schema"]["listings"] if item["name"] == key_name)
-
-def get_item_class(type_name):
-    return [item for item in world["player"]["inventory"] if type_name in item["model"]]
-
-def get_stat(item, name, field):
-    return int(next(stat[field] for stat in item["stats"] if stat["name"] == name))
-
-def submit_event(query_data):
-    error = False
-    response = None
-    query_url = query_endpoint + urllib.parse.urlencode(query_data)
-    try:
-        response = json.loads(urllib.request.urlopen(query_url).read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        print(str(e))
-        response = e.read().decode("utf-8")
-
-        error = True
-
-    if error or "error" in response:
-        print("ERROR on query:")
-        print(query_url)
-        # pprint(query_data)
-        print(response)
-    else:
-        if "wallet" in response:
-            world["player"]["wallet"] = response["wallet"]
-        if "inventory" in response:
-            world["player"]["inventory"] = response["inventory"]
-
-    return response
 
 def aquire_characters():
     print("\nAQUIRING CHARACTERS\n")
@@ -127,9 +70,13 @@ def aquire_characters():
         print("Leveling up character " + character_name + " " + str(levels_to_upgrade) + " times ", end = "")
         for i in range (0, levels_to_upgrade):
             submit_event(event)
-            print(".", end = "", flush = True)
+            if levels_to_upgrade <= 30:
+                print(".", end = "", flush = True)
+            elif i % 2:
+                print(".", end = "", flush = True)
         print(" DONE")
     print("\nCHARACTERS AQUIRED\n\n")
+
 
 def equip_character(character):
     character_name = character["model"].replace("character:", "")
@@ -185,6 +132,7 @@ def acquire_sidekicks():
 
     print("\nSIDEKICKS AQUIRED\n\n")
 
+
 def aquire_eggs(rarity, num_eggs):
     print("unlocking " + str(num_eggs) + " " + rarity +" eggs " , end = "")
     event = {"k": get_func_key("player_key")}
@@ -197,6 +145,7 @@ def aquire_eggs(rarity, num_eggs):
             print(":", end = "", flush = True)
     print(" DONE")
 
+
 def aquire_dragons(rarity, num_dragons):
     print("acquiring " + str(num_dragons) + " " + rarity  + " dragons" , end = "")
     event = {"k": get_func_key("player_key")}
@@ -207,6 +156,7 @@ def aquire_dragons(rarity, num_dragons):
     print(" DONE")
 
 
+
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
     print("Leveling up " + str(len(sidekicks)) + " sidekicks")
@@ -214,6 +164,7 @@ def level_up_sidekicks():
     for i in range(0, math.ceil(len(sidekicks)/2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_gamess(1)
+
 
 def evolve_sidekicks(cull_extra = False):
     sidekicks = get_item_class("sidekick")
@@ -254,14 +205,12 @@ def evolve_sidekicks(cull_extra = False):
         print("Attempting to Cull " + str(num_deletion_candidates) + " of " + str(len(sidekicks)) + " subpar sidekicks")
         event = {"k": get_func_key("player_key")}
         event["l"] = get_func_key("listing_sell_dragon")
-        while (len(evolution_candidates)):
-            match_target = evolution_candidates[0]
-            evolution_candidates.remove(match_target)
-            event["sidekick"] = match_target["key"]
+        for i in range(0, num_deletion_candidates):
+            event["sidekick"] = deletion_candidates[i]["key"]
             submit_event(event)
             if len(num_deletion_candidates) <= 40:
                 print(".", end = "", flush = True)
-            elif len(evolution_candidates) % 2:
+            elif i % 2:
                 print(":", end = "", flush = True)
 
 
@@ -295,6 +244,7 @@ def equip_sidekicks(new_left, new_right):
         submit_event(event)
     print("Equipped 2 new pets")
 
+
 def complete_gamess(num_games = 1):
     print("Farming " + str(num_games) + " Rounds ", end = "")
     sidekicks = get_item_class("sidekick")
@@ -320,5 +270,67 @@ def complete_gamess(num_games = 1):
         elif i % 2:
             print(":", end = "", flush = True)
     print(" DONE")
+
+
+def get_func_key(key_name):
+    if key_name == "player_key":
+        return world["player"]["key"]
+    elif key_name  == "item_global":
+        return next(item["key"] for item in world["player"]["inventory"] if item["model"] == "item_global")
+    else:
+        return next(item["key"] for item in world["schema"]["listings"] if item["name"] == key_name)
+
+
+def get_item_class(type_name):
+    return [item for item in world["player"]["inventory"] if type_name in item["model"]]
+
+
+def get_stat(item, name, field):
+    return int(next(stat[field] for stat in item["stats"] if stat["name"] == name))
+
+
+def submit_event(query_data):
+    error = False
+    response = None
+    query_url = query_endpoint + urllib.parse.urlencode(query_data)
+    try:
+        response = json.loads(urllib.request.urlopen(query_url).read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        print(str(e))
+        response = e.read().decode("utf-8")
+
+        error = True
+
+    if error or "error" in response:
+        print("ERROR on query:")
+        print(query_url)
+        # pprint(query_data)
+        print(response)
+    else:
+        if "wallet" in response:
+            world["player"]["wallet"] = response["wallet"]
+        if "inventory" in response:
+            world["player"]["inventory"] = response["inventory"]
+
+    return response
+
+
+def exit_tutorial():
+    if (get_item_class("token:tutorialComplete")):
+        return
+    print("\nEXITING TUTORIAL\n")
+    characters = get_item_class("character")
+    curr_character = next(character for character in characters if character["state"] == "equipped")
+    event = {"k": get_func_key("player_key")}
+    event["l"] = get_func_key("listing_tutorial_lvl5")
+    event["character"] = curr_character["key"]
+    submit_event(event)
+    print("\nTUTORIAL EXITED\n")
+
+
+def default_inventory():
+    event = {"k": get_func_key("player_key")}
+    event["l"] = get_func_key("listing_default_inventory")
+    submit_event(event)
 
 if __name__ == "__main__": main()

@@ -24,13 +24,13 @@
 1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file.
 2.  Open Google Chrome (desktop)
 3.  In Chrome, open a messenger. Do not start the game yet.
-4.  In Chrome, Open the Devloper Tools by clicking Menu -> More Tools -> Developer Tools.
+4.  In Chrome, Open Devloper Tools by clicking Menu -> More Tools -> Developer Tools.
 5.  In Chrome Developer Tools, click Network and then the Filter button in the top left hand corner.
-6.  In Chrome Developer Tools, paste the following without quotes into the text box that says Filter:
-    \"stormcloud-146919.appspot.com/auth/login/?uid=\"
+6.  In Chrome Developer Tools, paste the following without quotes into the Filter box:
+    \"stormcloud-146919.appspot.com/auth/\"
 7.  In Chrome Developer Tools, right click the entry under Name and select Copy -> Copy Link Address, it should start with \"?uid=\" followed by a bunch of numbers.
-8.  Navigate to where you downloaded EverWingHax.py and run it by dobule clicking on it.
-9.  When prompted, paste in the URL you got in Step 7 then press enter
-10. Wait for it to finish. It takes a while but hey, at least it still beats grinding right?
+8.  Navigate to where you downloaded EverWingHax.py and double click to run it.
+9.  When prompted, paste in the URL you copied in Step 7 then press enter.
+10. Wait for the hack it to finish. It takes a while but hey you can still play the game while it's doing its thing. Hey, still beats grinding right? ;)
 
 ![Blah](https://raw.githubusercontent.com/isometric/EverWingHax/master/hax.png)
