@@ -6,7 +6,6 @@ import json
 import math
 import pprint
 
-debug = False
 
 def main():
     print("""\
@@ -47,7 +46,7 @@ INSTRUCTIONS
     global world
     # need to explicity set it here for some reason
     world = update_world()
-    
+
     aquire_characters()
 
     acquire_sidekicks()
@@ -205,7 +204,7 @@ def evolve_sidekicks(cull_extra=False):
         submit_event(event, update_world=False)
 
     if cull_extra:
-        deletion_candidates =[sidekick for sidekick in sidekicks
+        deletion_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
         and get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
         num_deletion_candidates = len(deletion_candidates)
