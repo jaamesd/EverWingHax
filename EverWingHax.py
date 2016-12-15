@@ -16,16 +16,16 @@ def main():
                                                       by andromeduck
 INSTRUCTIONS
 
-  1.  Open Google Chrome (desktop)
-  2.  Open a messenger tab in chrome
-  3.  Open the Devloper Tools by clicking Menu -> More Tools -> Developer Tools
-  4.  In Developer Tools, click Network and then the Filter button in the top
-      left hand corner
-  5.  In Developer Tools, paste the following into the Filter box without quotes
-      \"stormcloud-146919.appspot.com/auth/login/?uid=\"
-  6.  In Developer Tools -> Network, right click the entry under Name and select
-      Copy -> Copy Link Address, it should start with \"?uid=\"
-  7.  Paste it below
+  1. Open Google Chrome (desktop)
+  2. In Chrome, open a messenger. Do not start the game yet.
+  3. In Chrome, Open Devloper Tools via Menu > More Tools > Developer Tools.
+  4. In Chrome Developer Tools, click Network and then the Filter button in
+     the top left hand corner.
+  5. In Chrome Developer Tools, paste the following without quotes into the
+     text box that says Filter: \"stormcloud-146919.appspot.com/auth/\"
+  6. In Chrome Developer Tools, right click the new entry under Name and select
+     Copy > Copy Link Address. It begins with \"?uid=\" followed by numbers.
+  7. Paste it in the prompt below.
     """)
 
     # For testing:
