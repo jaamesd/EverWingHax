@@ -1,6 +1,10 @@
 #! /usr/bin/env python3
-import urllib.request, urllib.parse, json, codecs, math
-from pprint import pprint
+import urllib.request
+import urllib.parse
+import codecs
+import json
+import math
+import pprint
 
 
 def main():
@@ -29,12 +33,12 @@ INSTRUCTIONS
     """)
 
     # For testing:
-    # profile_url = "https://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
+    # profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     profile_url = input("Profile URL:\n")
 
     global query_endpoint
-    query_endpoint = "https://stormcloud-146919.appspot.com/purchase/listing/?"
+    query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
 
     try:
         print("\n\nSTARTING HAX\n")
@@ -70,13 +74,13 @@ def aquire_characters():
         event["l"] = get_func_key("listing_level_up_character")
         event["character"] = character["key"]
         levels_to_upgrade = get_stat(character, "level", "maximum") - get_stat(character, "level", "value")
-        print("Leveling up character " + character_name + " " + str(levels_to_upgrade) + " times ", end = "")
-        for i in range (0, levels_to_upgrade):
+        print("Leveling up character " + character_name + " " + str(levels_to_upgrade) + " times ", end="")
+        for i in range(0, levels_to_upgrade):
             submit_event(event)
             if levels_to_upgrade <= 30:
-                print(".", end = "", flush = True)
+                print(".", end="", flush=True)
             elif i % 2:
-                print(".", end = "", flush = True)
+                print(".", end="", flush=True)
         print(" DONE")
     print("\nCHARACTERS AQUIRED\n\n")
 
@@ -87,8 +91,8 @@ def equip_character(character):
         return False
 
     if character["state"] == "locked":
-        complete_gamess(2);
-        print("Unlocking Character " + character_name, end = " ... ")
+        complete_gamess(2)
+        print("Unlocking Character " + character_name, end=" ... ")
         event = {"k": get_func_key("player_key")}
         event["l"] = get_func_key("listing_unlock_character_" + character_name)
         event["global"] = get_func_key("item_global")
@@ -99,7 +103,7 @@ def equip_character(character):
         print("DONE")
 
     if character["state"] == "idle":
-        print("Equipping Character:" + character_name, end = " ... ")
+        print("Equipping Character:" + character_name, end=" ... ")
         characters = get_item_class("character")
         curr_character = next(character for character in characters if character["state"] == "equipped")
         event = {"k": get_func_key("player_key")}
@@ -115,7 +119,7 @@ def equip_character(character):
 def acquire_sidekicks():
     print("\nAQUIRING SIDEKICKS\n")
     print("Unlocking a ton of dragons")
-    for i in range(0,20):
+    for i in range(0, 20):
         complete_gamess(100)
 
         aquire_eggs("common", 9)
@@ -129,7 +133,7 @@ def acquire_sidekicks():
         level_up_sidekicks()
         evolve_sidekicks(False)
 
-    for i in range (0, 3):
+    for i in range(0, 3):
         level_up_sidekicks()
         evolve_sidekicks(True)
 
@@ -137,39 +141,38 @@ def acquire_sidekicks():
 
 
 def aquire_eggs(rarity, num_eggs):
-    print("unlocking " + str(num_eggs) + " " + rarity +" eggs " , end = "")
+    print("unlocking " + str(num_eggs) + " " + rarity + " eggs ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
-    for i in range(0,num_eggs):
+    for i in range(0, num_eggs):
         submit_event(event)
         if num_eggs <= 40:
-            print(".", end = "", flush = True)
+            print(".", end="", flush=True)
         elif i % 2:
-            print(":", end = "", flush = True)
+            print(":", end="", flush=True)
     print(" DONE")
 
 
 def aquire_dragons(rarity, num_dragons):
-    print("acquiring " + str(num_dragons) + " " + rarity  + " dragons" , end = "")
+    print("acquiring " + str(num_dragons) + " " + rarity + " dragons", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
     for j in range(0, num_dragons):
         submit_event(event)
-        print(".", end = "", flush = True)
+        print(".", end="", flush=True)
     print(" DONE")
-
 
 
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
     print("Leveling up " + str(len(sidekicks)) + " sidekicks")
     sidekicks = [sidekick for sidekick in sidekicks if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
-    for i in range(0, math.ceil(len(sidekicks)/2)):
+    for i in range(0, math.ceil(len(sidekicks) / 2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_gamess(1)
 
 
-def evolve_sidekicks(cull_extra = False):
+def evolve_sidekicks(cull_extra=False):
     sidekicks = get_item_class("sidekick")
     evolution_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
@@ -201,7 +204,7 @@ def evolve_sidekicks(cull_extra = False):
         submit_event(event)
 
     if cull_extra:
-        deletion_candidates = [sidekick for sidekick in sidekicks
+        deletion_candidates =[sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
         and get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
         num_deletion_candidates = len(deletion_candidates)
@@ -212,9 +215,9 @@ def evolve_sidekicks(cull_extra = False):
             event["sidekick"] = deletion_candidates[i]["key"]
             submit_event(event)
             if len(num_deletion_candidates) <= 40:
-                print(".", end = "", flush = True)
+                print(".", end="", flush=True)
             elif i % 2:
-                print(":", end = "", flush = True)
+                print(":", end="", flush=True)
 
 
 def equip_sidekicks(new_left, new_right):
@@ -223,13 +226,13 @@ def equip_sidekicks(new_left, new_right):
     event = {"k": get_func_key("player_key")}
     if curr_left:
         event["l"] = get_func_key("listing_equip_dragon_left_swap")
-        event["sidekick1"] = new_left ["key"]
+        event["sidekick1"] = new_left["key"]
         event["sidekick2"] = curr_left["key"]
         if new_left["key"] != curr_left["key"]:
             submit_event(event)
     else:
         event["l"] = get_func_key("listing_equip_dragon_left")
-        event["sidekick1"] = new_left ["key"]
+        event["sidekick1"] = new_left["key"]
         submit_event(event)
 
     sidekicks = get_item_class("sidekick")
@@ -237,19 +240,19 @@ def equip_sidekicks(new_left, new_right):
     event = {"k": get_func_key("player_key")}
     if curr_right:
         event["l"] = get_func_key("listing_equip_dragon_right_swap")
-        event["sidekick1"] = new_right ["key"]
+        event["sidekick1"] = new_right["key"]
         event["sidekick2"] = curr_right["key"]
         if new_right["key"] != curr_right["key"]:
             submit_event(event)
     else:
         event["l"] = get_func_key("listing_equip_dragon_right")
-        event["sidekick1"] = new_right ["key"]
+        event["sidekick1"] = new_right["key"]
         submit_event(event)
     print("Equipped 2 new pets")
 
 
-def complete_gamess(num_games = 1):
-    print("Farming " + str(num_games) + " Rounds ", end = "")
+def complete_gamess(num_games=1):
+    print("Farming " + str(num_games) + " Rounds ", end="")
     sidekicks = get_item_class("sidekick")
     curr_left = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedLeft"), None)
     curr_right = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedRight"), None)
@@ -266,26 +269,26 @@ def complete_gamess(num_games = 1):
         event["sidekick2"] = curr_right["key"]
         event["xpSidekick2"] = 99999
 
-    for i in range (0, num_games):
+    for i in range(0, num_games):
         submit_event(event)
         if num_games <= 40:
-            print(".", end = "", flush = True)
+            print(".", end="", flush=True)
         elif i % 2:
-            print(":", end = "", flush = True)
+            print(":", end="", flush=True)
     print(" DONE")
 
 
 def get_func_key(key_name):
     if key_name == "player_key":
         return world["player"]["key"]
-    elif key_name  == "item_global":
+    elif key_name == "item_global":
         return next(item["key"] for item in world["player"]["inventory"] if item["model"] == "item_global")
     else:
         return next(item["key"] for item in world["schema"]["listings"] if item["name"] == key_name)
 
 
 def get_item_class(type_name):
-    return [item for item in world["player"]["inventory"] if type_name in item["model"]]
+    return[item for item in world["player"]["inventory"] if type_name in item["model"]]
 
 
 def get_stat(item, name, field):
@@ -330,4 +333,5 @@ def default_inventory():
     event["l"] = get_func_key("listing_default_inventory")
     submit_event(event)
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
