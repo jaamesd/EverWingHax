@@ -6,6 +6,7 @@ import json
 import math
 import pprint
 
+debug = False
 
 def main():
     print("""\
@@ -35,20 +36,18 @@ INSTRUCTIONS
     # For testing:
     # profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
+    global profile_url
     profile_url = input("Profile URL:\n")
 
     global query_endpoint
     query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
 
-    try:
-        print("\n\nSTARTING HAX\n")
-        global world
-        world = json.loads(urllib.request.urlopen(profile_url).read().decode('utf-8'))
-    except Exception as error:
-        print("Invalid input")
-        print(str(error))
-        return 1
+    print("\n\nSTARTING HAX\n")
 
+    global world
+    # need to explicity set it here for some reason
+    world = update_world()
+    
     aquire_characters()
 
     acquire_sidekicks()
@@ -91,7 +90,7 @@ def equip_character(character):
         return False
 
     if character["state"] == "locked":
-        complete_gamess(2)
+        complete_games(2)
         print("Unlocking Character " + character_name, end=" ... ")
         event = {"k": get_func_key("player_key")}
         event["l"] = get_func_key("listing_unlock_character_" + character_name)
@@ -120,7 +119,7 @@ def acquire_sidekicks():
     print("\nAQUIRING SIDEKICKS\n")
     print("Unlocking a ton of dragons")
     for i in range(0, 20):
-        complete_gamess(100)
+        complete_games(100)
 
         aquire_eggs("common", 9)
         aquire_dragons("common", 7)
@@ -131,11 +130,11 @@ def acquire_sidekicks():
         aquire_dragons("legendary", 8)
 
         level_up_sidekicks()
-        evolve_sidekicks(False)
+        evolve_sidekicks()
 
     for i in range(0, 3):
         level_up_sidekicks()
-        evolve_sidekicks(True)
+        evolve_sidekicks(cull_extra=True)
 
     print("\nSIDEKICKS AQUIRED\n\n")
 
@@ -145,11 +144,12 @@ def aquire_eggs(rarity, num_eggs):
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0, num_eggs):
-        submit_event(event)
+        submit_event(event, update_world=False)
         if num_eggs <= 40:
             print(".", end="", flush=True)
         elif i % 2:
             print(":", end="", flush=True)
+    update_world()
     print(" DONE")
 
 
@@ -158,8 +158,9 @@ def aquire_dragons(rarity, num_dragons):
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
     for j in range(0, num_dragons):
-        submit_event(event)
+        submit_event(event, update_world=False)
         print(".", end="", flush=True)
+    update_world()
     print(" DONE")
 
 
@@ -169,7 +170,7 @@ def level_up_sidekicks():
     sidekicks = [sidekick for sidekick in sidekicks if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
     for i in range(0, math.ceil(len(sidekicks) / 2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
-        complete_gamess(1)
+        complete_games(1)
 
 
 def evolve_sidekicks(cull_extra=False):
@@ -201,7 +202,7 @@ def evolve_sidekicks(cull_extra=False):
         else:
             print("No match, Skipping")
             continue
-        submit_event(event)
+        submit_event(event, update_world=False)
 
     if cull_extra:
         deletion_candidates =[sidekick for sidekick in sidekicks
@@ -213,7 +214,7 @@ def evolve_sidekicks(cull_extra=False):
         event["l"] = get_func_key("listing_sell_dragon")
         for i in range(0, num_deletion_candidates):
             event["sidekick"] = deletion_candidates[i]["key"]
-            submit_event(event)
+            submit_event(event, update_world=False)
             if len(num_deletion_candidates) <= 40:
                 print(".", end="", flush=True)
             elif i % 2:
@@ -251,7 +252,7 @@ def equip_sidekicks(new_left, new_right):
     print("Equipped 2 new pets")
 
 
-def complete_gamess(num_games=1):
+def complete_games(num_games):
     print("Farming " + str(num_games) + " Rounds ", end="")
     sidekicks = get_item_class("sidekick")
     curr_left = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedLeft"), None)
@@ -270,11 +271,12 @@ def complete_gamess(num_games=1):
         event["xpSidekick2"] = 99999
 
     for i in range(0, num_games):
-        submit_event(event)
+        submit_event(event, update_world=False)
         if num_games <= 40:
             print(".", end="", flush=True)
         elif i % 2:
             print(":", end="", flush=True)
+    update_world()
     print(" DONE")
 
 
@@ -295,10 +297,20 @@ def get_stat(item, name, field):
     return int(next(stat[field] for stat in item["stats"] if stat["name"] == name))
 
 
-def submit_event(query_data):
+def update_world():
+    try:
+        world = json.loads(urllib.request.urlopen(profile_url).read().decode('utf-8'))
+        return world
+    except Exception as error:
+        print("Invalid Profile URL: ", profile_url)
+        print(str(error))
+        exit(1)
+
+
+def submit_event(query_data, update_world=True):
     try:
         query_url = query_endpoint + urllib.parse.urlencode(query_data)
-        response = json.loads(urllib.request.urlopen(query_url).read().decode("utf-8"))
+        response = urllib.request.urlopen(query_url).read().decode("utf-8")
     except urllib.error.HTTPError as e:
         print(str(e))
         response = e.read().decode("utf-8")
@@ -306,12 +318,12 @@ def submit_event(query_data):
     if "error" in response:
         print("ERROR on query: ", query_url)
         print(response["message"])
-    else:
+    elif update_world:
+        response = json.loads(response)
         if "wallet" in response:
             world["player"]["wallet"] = response["wallet"]
         if "inventory" in response:
             world["player"]["inventory"] = response["inventory"]
-
     return response
 
 
