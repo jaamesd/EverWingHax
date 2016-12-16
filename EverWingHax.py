@@ -1,12 +1,8 @@
 #! /usr/bin/env python3
 import urllib.request
 import urllib.parse
-import codecs
 import json
-import math
 import sys
-from pprint import pprint
-
 
 if sys.version_info[0] < 3:
     print("Please run this script with Python 3.3+", end="\n")
@@ -166,7 +162,7 @@ def aquire_eggs(rarity, num_eggs):
         elif i % 2:
             print(":", end="")
             sys.stdout.flush()
-            update_world()
+    update_world()
     print(" DONE")
 
 
@@ -186,7 +182,7 @@ def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
     sidekicks = [sidekick for sidekick in sidekicks if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
     print("Leveling up " + str(len(sidekicks)) + " sidekicks")
-    for i in range(0, math.ceil(len(sidekicks) / 2)):
+    for i in range(0, int((len(sidekicks) +1)/ 2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_games(1)
     print(" DONE")
@@ -358,8 +354,8 @@ def submit_event(query_data, update_world=True):
     if "error" in response:
         if debug:
             print("ERROR on query: ", query_url)
-            if type(response) == type({}):
-                pprint(URL)
+            if type(response) == dict:
+                print(URL)
                 print(response["message"])
             else:
                 print(response)
