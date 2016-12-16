@@ -195,7 +195,11 @@ def evolve_sidekicks(cull_extra=False):
     evolution_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
         and get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")]
-    print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks")
+    print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks ", end="")
+    if cull_extra:
+        print(" deleting unmatched sidekicks")
+    else:
+        print(" skipping unmatched sidekicks")
     while (len(evolution_candidates)):
         event = {"k": get_func_key("player_key")}
         match_target = evolution_candidates[0]
@@ -211,15 +215,15 @@ def evolve_sidekicks(cull_extra=False):
             event["l"] = get_func_key("listing_fuse_dragon_zodiac_bonus")
             event["sidekick1"] = match_target["key"]
             event["sidekick2"] = ideal_match["key"]
-            print("evolved ", end="")
+            print(":", end="")
             sys.stdout.flush()
         elif cull_extra:
             event["l"] = get_func_key("listing_sell_dragon")
             event["sidekick"] = match_target["key"]
-            print("deleted ", end="")
+            print(".", end="")
             sys.stdout.flush()
         else:
-            print("skipped ", end="")
+            print(".", end="")
             sys.stdout.flush()
             continue
         submit_event(event, update_world=False)
