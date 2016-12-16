@@ -9,7 +9,9 @@ import sys
 
 
 if sys.version_info[0] < 3 or sys.version_info[1] < 3:
-    print("Please run this script with Python 3.3+")
+    print("Please run this script with Python 3.3+", end="\n", flush=True)
+    if sys.platform == "win32":
+        raw_input("press any key to exit")
     exit(1)
 
 
@@ -38,11 +40,12 @@ INSTRUCTIONS
   7. Paste it in the prompt below.
     """)
 
-    # For testing:
-    # profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     global profile_url
     profile_url = input("Profile URL:\n")
+
+    # For testing:
+    # profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     global query_endpoint
     query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
