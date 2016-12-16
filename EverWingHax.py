@@ -42,19 +42,17 @@ INSTRUCTIONS
 
 
     global profile_url
-    profile_url = input("Profile URL:\n")
+    # profile_url = input("Profile URL:\n")
 
     # For testing:
-    # profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
+    profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     global query_endpoint
     query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
 
     print("\n\nSTARTING HAX\n")
 
-    global world
-    # need to explicity set it here for some reason
-    world = update_world()
+    update_world()
 
     aquire_characters()
 
@@ -307,6 +305,7 @@ def get_stat(item, name, field):
 
 def update_world():
     try:
+        global world
         world = json.loads(urllib.request.urlopen(profile_url).read().decode('utf-8'))
         return world
     except Exception as error:
