@@ -5,7 +5,7 @@ import json
 import sys
 
 if sys.version_info[0] < 3:
-    print("Please run this script with Python 3.3+", end="\n")
+    print("Please run this script with Python 3", end="\n") # <- SyntaxError means Python 2
     sys.stdout.flush()
     if sys.platform == "win32":
         raw_input("press any key to exit")
