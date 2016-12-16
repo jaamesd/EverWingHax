@@ -12,13 +12,6 @@ except ImportError:
     from urllib import urlencode
     from urllib2 import urlopen, Request, HTTPError
 
-# if sys.version_info[0] < 3:
-#     print("Please run this script with Python 3", end="\n") # <- SyntaxError means Python 2
-#     sys.stdout.flush()
-#     if sys.platform == "win32":
-#         raw_input("hit return to exit")
-#     exit(1)
-
 
 def main():
     print("""\
@@ -34,15 +27,15 @@ def main():
 INSTRUCTIONS
 
   1. Open Google Chrome (desktop)
-  2. In Chrome, open a messenger. Do not start the game yet.
-  3. In Chrome, Open Devloper Tools via Menu > More Tools > Developer Tools.
-  4. In Chrome Developer Tools, click Network and then the Filter button in
-     the top left hand corner.
-  5. In Chrome Developer Tools, paste the following without quotes into the
-     Filter box on the upper left: \"stormcloud-146919.appspot.com/auth/\"
-  6. In Chrome Developer Tools, right click the new entry under Name and select
-     Copy > Copy Link Address. It begins with \"?uid=\" followed by numbers.
-  7. Paste it in the prompt below.
+  2. In Chrome, open a messenger.com tab. Do not start the game yet.
+  3. In that tab, Open Devloper Tools via Menu > More Tools > Developer Tools.
+  4. In Developer Tools, click Network then the Filter button in the top left.
+  5. In Developer Tools, paste the following without quotes into the Filter box
+     in the top left: "stormcloud-146919.appspot.com/auth/"
+  6. In the messenger.com tab, start EverWing. You should now should see a new
+     entry in Developer Tools starting with "?uid=" and followed by numbers.
+  7. In Developer Tools, right click it and select Copy > Copy Link Address.
+  8. Paste it in the prompt below.
     """)
     global debug
     debug = False
@@ -63,6 +56,8 @@ INSTRUCTIONS
         profile_url = input("Profile URL:\n")
     elif profile_url == None:
         profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
+        print("\nUSING DEBUG URL")
+        print(profile_url)
 
     print("\n\nSTARTING HAX\n")
 
