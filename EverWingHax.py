@@ -1,15 +1,23 @@
 #! /usr/bin/env python3
-import urllib.request
-import urllib.parse
+from __future__ import print_function
 import json
 import sys
 
-if sys.version_info[0] < 3:
-    print("Please run this script with Python 3", end="\n") # <- SyntaxError means Python 2
-    sys.stdout.flush()
-    if sys.platform == "win32":
-        raw_input("hit return to exit")
-    exit(1)
+try:
+    from urllib.parse import urlparse, urlencode
+    from urllib.request import urlopen, Request
+    from urllib.error import HTTPError
+except ImportError:
+    from urlparse import urlparse
+    from urllib import urlencode
+    from urllib2 import urlopen, Request, HTTPError
+
+# if sys.version_info[0] < 3:
+#     print("Please run this script with Python 3", end="\n") # <- SyntaxError means Python 2
+#     sys.stdout.flush()
+#     if sys.platform == "win32":
+#         raw_input("hit return to exit")
+#     exit(1)
 
 
 def main():
@@ -335,7 +343,7 @@ def get_stat(item, name, field):
 def update_world():
     try:
         global world
-        world = json.loads(urllib.request.urlopen(profile_url).read().decode('utf-8'))
+        world = json.loads(urlopen(profile_url).read().decode('utf-8'))
         return world
     except Exception as error:
         print("Invalid Profile URL: ", profile_url)
@@ -345,9 +353,9 @@ def update_world():
 
 def submit_event(query_data, update_world=True):
     try:
-        query_url = query_endpoint + urllib.parse.urlencode(query_data)
-        response = urllib.request.urlopen(query_url).read().decode("utf-8")
-    except urllib.error.HTTPError as e:
+        query_url = query_endpoint + urlencode(query_data)
+        response = urlopen(query_url).read().decode("utf-8")
+    except HTTPError as e:
         print(str(e))
         response = e.read().decode("utf-8")
 

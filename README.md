@@ -20,9 +20,7 @@
 
 #Instructions
 
-0. This script requires [Python 3.](https://www.python.org/downloads/).
- * If you see "Syntax Error" you are running it in Python 2
- * You are on Windows with Python 2 and 3, right click and select a Python 3 interpreter
+0. This script is now compatible with both Python 2 and 3. You can [get it here](https://www.python.org/downloads/) if you don't have it already.
 1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file.
 2. Open Google Chrome (desktop)
 3. In Chrome, open a messenger. Do not start the game yet.
