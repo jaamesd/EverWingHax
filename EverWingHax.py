@@ -4,12 +4,13 @@ import urllib.parse
 import codecs
 import json
 import math
-import pprint
 import sys
+from pprint import pprint
 
 
-if sys.version_info[0] < 3 or sys.version_info[1] < 3:
-    print("Please run this script with Python 3.3+", end="\n", flush=True)
+if sys.version_info[0] < 3:
+    print("Please run this script with Python 3.3+", end="\n")
+    sys.stdout.flush()
     if sys.platform == "win32":
         raw_input("press any key to exit")
     exit(1)
@@ -39,16 +40,25 @@ INSTRUCTIONS
      Copy > Copy Link Address. It begins with \"?uid=\" followed by numbers.
   7. Paste it in the prompt below.
     """)
-
-
+    global debug
+    debug = False
     global profile_url
-    # profile_url = input("Profile URL:\n")
-
-    # For testing:
-    profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
-
+    profile_url = None
     global query_endpoint
     query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
+
+    for i in range(0, len(sys.argv)):
+        if "stormcloud-146919.appspot.com/auth" in sys.argv[i]:
+            profile_url = sys.argv[i]
+        if "debug" in sys.argv[i]:
+            print("DEBUG MODE")
+            debug = True
+
+
+    if debug == False and profile_url == None:
+        profile_url = input("Profile URL:\n")
+    elif profile_url == None:
+        profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     print("\n\nSTARTING HAX\n")
 
@@ -83,9 +93,11 @@ def aquire_characters():
         for i in range(0, levels_to_upgrade):
             submit_event(event)
             if levels_to_upgrade <= 30:
-                print(".", end="", flush=True)
+                print(".", end="")
+                sys.stdout.flush()
             elif i % 2:
-                print(".", end="", flush=True)
+                print(":", end="")
+                sys.stdout.flush()
         print(" DONE")
     print("\nCHARACTERS AQUIRED\n\n")
 
@@ -97,7 +109,7 @@ def equip_character(character):
 
     if character["state"] == "locked":
         complete_games(2)
-        print("Unlocking Character " + character_name, end=" ... ")
+        print("Unlocking Character " + character_name + " ... ", end="")
         event = {"k": get_func_key("player_key")}
         event["l"] = get_func_key("listing_unlock_character_" + character_name)
         event["global"] = get_func_key("item_global")
@@ -108,7 +120,7 @@ def equip_character(character):
         print("DONE")
 
     if character["state"] == "idle":
-        print("Equipping Character:" + character_name, end=" ... ")
+        print("Equipping Character:" + character_name + " ... ", end="")
         characters = get_item_class("character")
         curr_character = next(character for character in characters if character["state"] == "equipped")
         event = {"k": get_func_key("player_key")}
@@ -126,15 +138,12 @@ def acquire_sidekicks():
     print("Unlocking a ton of dragons")
     for i in range(0, 20):
         complete_games(100)
-
-        aquire_eggs("common", 9)
-        aquire_dragons("common", 7)
-        aquire_dragons("rare", 2)
-
+        # aquire_eggs("common", 9)
+        # aquire_dragons("common", 7)
+        # aquire_dragons("rare", 2)
         aquire_eggs("epic", 80)
-        aquire_dragons("rare", 13)
+        aquire_dragons("rare", 10)
         aquire_dragons("legendary", 8)
-
         level_up_sidekicks()
         evolve_sidekicks()
 
@@ -146,38 +155,41 @@ def acquire_sidekicks():
 
 
 def aquire_eggs(rarity, num_eggs):
-    print("unlocking " + str(num_eggs) + " " + rarity + " eggs ", end="")
+    print("aquire " + str(num_eggs) + " " + rarity + " eggs ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0, num_eggs):
         submit_event(event, update_world=False)
         if num_eggs <= 40:
-            print(".", end="", flush=True)
+            print(".", end="")
+            sys.stdout.flush()
         elif i % 2:
-            print(":", end="", flush=True)
-    update_world()
+            print(":", end="")
+            sys.stdout.flush()
+            update_world()
     print(" DONE")
 
 
 def aquire_dragons(rarity, num_dragons):
-    print("acquiring " + str(num_dragons) + " " + rarity + " dragons", end="")
+    print("acquiring " + str(num_dragons) + " " + rarity + " dragons ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
     for j in range(0, num_dragons):
         submit_event(event, update_world=False)
-        print(".", end="", flush=True)
+        print(".", end="")
+    sys.stdout.flush()
     update_world()
     print(" DONE")
 
 
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
-    print("Leveling up " + str(len(sidekicks)) + " sidekicks")
     sidekicks = [sidekick for sidekick in sidekicks if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
+    print("Leveling up " + str(len(sidekicks)) + " sidekicks")
     for i in range(0, math.ceil(len(sidekicks) / 2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
         complete_games(1)
-
+    print(" DONE")
 
 def evolve_sidekicks(cull_extra=False):
     sidekicks = get_item_class("sidekick")
@@ -197,34 +209,48 @@ def evolve_sidekicks(cull_extra=False):
 
         if ideal_match:
             evolution_candidates.remove(ideal_match)
-            print("Match found, Combining")
             event["l"] = get_func_key("listing_fuse_dragon_zodiac_bonus")
             event["sidekick1"] = match_target["key"]
             event["sidekick2"] = ideal_match["key"]
+            print("evolved ", end="")
+            sys.stdout.flush()
         elif cull_extra:
-            print("No match, Deleting")
             event["l"] = get_func_key("listing_sell_dragon")
             event["sidekick"] = match_target["key"]
+            print("deleted ", end="")
+            sys.stdout.flush()
         else:
-            print("No match, Skipping")
+            print("skipped ", end="")
+            sys.stdout.flush()
             continue
         submit_event(event, update_world=False)
 
+    update_world()
+    print(" DONE")
+
     if cull_extra:
-        deletion_candidates = [sidekick for sidekick in sidekicks
-        if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
-        and get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
-        num_deletion_candidates = len(deletion_candidates)
-        print("Attempting to Cull " + str(num_deletion_candidates) + " of " + str(len(sidekicks)) + " subpar sidekicks")
-        event = {"k": get_func_key("player_key")}
-        event["l"] = get_func_key("listing_sell_dragon")
-        for i in range(0, num_deletion_candidates):
-            event["sidekick"] = deletion_candidates[i]["key"]
-            submit_event(event, update_world=False)
-            if len(num_deletion_candidates) <= 40:
-                print(".", end="", flush=True)
-            elif i % 2:
-                print(":", end="", flush=True)
+        print("Cleaning up evoluton leftovers")
+        extra_sidekicks = [sidekick for sidekick in sidekicks
+        if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")
+        or get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")
+        or get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
+        delete_sidekicks(extra_sidekicks)
+
+
+def delete_sidekicks(sidekicks):
+    print("Deleting " + str(len(sidekicks)) + " sidekicks")
+    event = {"k": get_func_key("player_key")}
+    event["l"] = get_func_key("listing_sell_dragon")
+    for i in range(0, len(sidekicks)):
+        event["sidekick"] = sidekicks[i]["key"]
+        submit_event(event, update_world=False)
+        if len(sidekicks) <= 40:
+            print(".", end="")
+            sys.stdout.flush()
+        elif i % 2:
+            print(":", end="")
+            sys.stdout.flush()
+    update_world()
 
 
 def equip_sidekicks(new_left, new_right):
@@ -255,11 +281,15 @@ def equip_sidekicks(new_left, new_right):
         event["l"] = get_func_key("listing_equip_dragon_right")
         event["sidekick1"] = new_right["key"]
         submit_event(event)
-    print("Equipped 2 new pets")
-
+    if debug:
+        print("Equipped Sidekicks")
+    else:
+        print(".", end="")
+        sys.stdout.flush()
 
 def complete_games(num_games):
-    print("Farming " + str(num_games) + " Rounds ", end="")
+    if debug or num_games > 1:
+        print("Farming " + str(num_games) + " Rounds ", end="")
     sidekicks = get_item_class("sidekick")
     curr_left = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedLeft"), None)
     curr_right = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedRight"), None)
@@ -279,11 +309,14 @@ def complete_games(num_games):
     for i in range(0, num_games):
         submit_event(event, update_world=False)
         if num_games <= 40:
-            print(".", end="", flush=True)
+            print(".", end="")
+            sys.stdout.flush()
         elif i % 2:
-            print(":", end="", flush=True)
+            print(":", end="")
+            sys.stdout.flush()
     update_world()
-    print(" DONE")
+    if debug or num_games > 1:
+        print(" DONE")
 
 
 def get_func_key(key_name):
@@ -323,11 +356,15 @@ def submit_event(query_data, update_world=True):
         response = e.read().decode("utf-8")
 
     if "error" in response:
-        print("ERROR on query: ", query_url)
-        if type(response) == type({}):
-            print(response["message"])
+        if debug:
+            print("ERROR on query: ", query_url)
+            if type(response) == type({}):
+                pprint(URL)
+                print(response["message"])
+            else:
+                print(response)
         else:
-            print(response)
+            print("!", end ="")
     elif update_world:
         response = json.loads(response)
         if "wallet" in response:
