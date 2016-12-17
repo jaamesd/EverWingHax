@@ -140,12 +140,10 @@ def acquire_sidekicks():
     print("Unlocking dragons, this may take a while but you can quit whenever you want")
     for i in range(0, 20):
         complete_games(10)
-        # aquire_eggs("common", 9)
-        # aquire_dragons("common", 7)
-        # aquire_dragons("rare", 2)
-        aquire_eggs("epic", 83)
-        aquire_dragons("rare", 10)
-        aquire_dragons("legendary", 9)
+        for j in range (0,10):
+            aquire_eggs("epic", 1)
+            aquire_dragons("rare", 10)
+            aquire_dragons("legendary", 1)
         level_up_sidekicks()
         evolve_sidekicks()
 
@@ -157,31 +155,35 @@ def acquire_sidekicks():
 
 
 def aquire_eggs(rarity, num_eggs):
-    print("aquire " + str(num_eggs) + " " + rarity + " eggs ", end="")
+    if num_eggs > 1:
+        print("aquire " + str(num_eggs) + " " + rarity + " eggs ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0, num_eggs):
-        submit_event(event, update_world=False)
+        submit_event(event, update_world=(num_eggs == 1))
         if num_eggs <= 40:
             print(".", end="")
             sys.stdout.flush()
         elif i % 2:
             print(":", end="")
             sys.stdout.flush()
-    update_world()
-    print(" DONE")
+    if num_eggs > 1:
+        update_world()
+        print(" DONE")
 
 
 def aquire_dragons(rarity, num_dragons):
-    print("acquiring " + str(num_dragons) + " " + rarity + " dragons ", end="")
+    if num_dragons > 1:
+        print("acquiring " + str(num_dragons) + " " + rarity + " dragons ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
     for j in range(0, num_dragons):
-        submit_event(event, update_world=False)
+        submit_event(event, update_world=(num_dragons == 1))
         print(".", end="")
     sys.stdout.flush()
     update_world()
-    print(" DONE")
+    if num_dragons > 1:
+        print(" DONE")
 
 
 def level_up_sidekicks():
