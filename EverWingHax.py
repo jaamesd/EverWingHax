@@ -235,7 +235,7 @@ def delete_extra_sidekicks(sidekicks):
         if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")
         or get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")
         or get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
-    print("Deleting " + str(len(sidekicks)) + " leftover sidekicks")
+    print("Deleting " + str(len(sidekicks)) + " leftover sidekicks ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_sell_dragon")
     for i in range(0, len(sidekicks)):
