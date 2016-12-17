@@ -114,7 +114,7 @@ def equip_character(character):
 
     if character["state"] == "locked":
         complete_games(2)
-        print("Unlocking Character " + character_name + " ... ", end="")
+        print("Unlocking Character " + character_name + " ", end="")
         event = {"k": get_func_key("player_key")}
         event["l"] = get_func_key("listing_unlock_character_" + character_name)
         event["global"] = get_func_key("item_global")
@@ -125,7 +125,7 @@ def equip_character(character):
         print("DONE")
 
     if character["state"] == "idle":
-        print("Equipping Character:" + character_name + " ... ", end="")
+        print("Equipping Character:" + character_name + " ", end="")
         characters = get_item_class("character")
         curr_character = next(character for character in characters if character["state"] == "equipped")
         event = {"k": get_func_key("player_key")}
@@ -154,7 +154,8 @@ def acquire_sidekicks():
     print("Evolving dragons")
     for i in range(0, 3):
         level_up_sidekicks()
-        evolve_sidekicks(cull_extra=True)
+        evolve_sidekicks()
+    delete_extra_sidekicks()
     print("\nSIDEKICKS ACQUIRED\n\n")
 
 
@@ -165,12 +166,8 @@ def acquire_eggs(rarity, num_eggs):
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0, num_eggs):
         submit_event(event, update_world=(num_eggs == 1))
-        if num_eggs <= 40:
-            print(".", end="")
-            sys.stdout.flush()
-        elif i % 2:
-            print(":", end="")
-            sys.stdout.flush()
+        print(":", end="")
+        sys.stdout.flush()
     if debug:
         print(" DONE")
 
@@ -200,16 +197,12 @@ def level_up_sidekicks():
     print(" DONE")
 
 
-def evolve_sidekicks(cull_extra=False):
+def evolve_sidekicks():
     sidekicks = get_item_class("sidekick")
     evolution_candidates = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") == get_stat(sidekick, "xp", "maximum")
         and get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")]
     print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks ", end="")
-    if cull_extra:
-        print("deleting unmatched sidekicks")
-    else:
-        print("skipping unmatched sidekicks")
     while (len(evolution_candidates)):
         event = {"k": get_func_key("player_key")}
         match_target = evolution_candidates[0]
@@ -227,11 +220,6 @@ def evolve_sidekicks(cull_extra=False):
             event["sidekick2"] = ideal_match["key"]
             print(":", end="")
             sys.stdout.flush()
-        elif cull_extra:
-            event["l"] = get_func_key("listing_sell_dragon")
-            event["sidekick"] = match_target["key"]
-            print(".", end="")
-            sys.stdout.flush()
         else:
             print(".", end="")
             sys.stdout.flush()
@@ -240,9 +228,6 @@ def evolve_sidekicks(cull_extra=False):
 
     update_world()
     print(" DONE")
-
-    if cull_extra:
-        delete_extra_sidekicks()
 
 
 def delete_extra_sidekicks(sidekicks):
@@ -322,12 +307,8 @@ def complete_games(num_games):
 
     for i in range(0, num_games):
         submit_event(event, update_world=False)
-        if num_games <= 40:
-            print(".", end="")
-            sys.stdout.flush()
-        elif i % 2:
-            print(":", end="")
-            sys.stdout.flush()
+        print(".", end="")
+        sys.stdout.flush()
     if debug:
         print(" DONE")
 
