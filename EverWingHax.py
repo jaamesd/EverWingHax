@@ -94,7 +94,7 @@ def acquire_characters():
         event["l"] = get_func_key("listing_level_up_character")
         event["character"] = character["key"]
         levels_to_upgrade = get_stat(character, "level", "maximum") - get_stat(character, "level", "value")
-        print("Leveling up character " + character_name + " " + str(levels_to_upgrade) + " times ", end="")
+        print("Leveling up character " + character_name + " " + str(levels_to_upgrade) + " times", end="")
         for i in range(0, levels_to_upgrade):
             submit_event(event)
             if levels_to_upgrade <= 30:
