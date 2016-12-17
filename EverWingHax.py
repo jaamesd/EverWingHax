@@ -139,7 +139,7 @@ def acquire_sidekicks():
     print("Unlocking dragons")
     num_rounds = 3
     for i in range(0, num_rounds):
-        print("Round " + str(i) + " of " + str(num_rounds))
+        print("Round " + str(i) + " of " + str(num_rounds), end="")
         complete_games(1)
         for j in range (0, 8):
             complete_games(1)
@@ -147,12 +147,10 @@ def acquire_sidekicks():
             acquire_dragons("rare", 1)
             acquire_dragons("legendary", 1)
         print(" DONE")
-
     print("Evolving dragons")
     for i in range(0, 3):
         level_up_sidekicks()
         evolve_sidekicks(cull_extra=True)
-
     print("\nSIDEKICKS ACQUIRED\n\n")
 
 
