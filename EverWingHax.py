@@ -137,7 +137,7 @@ def acquire_sidekicks():
     if debug:
         print("Deleting current sidekicks")
         delete_extra_sidekicks(get_item_class("sidekick"))
-    print("Unlocking a ton of dragons, this may take a while but you can quit whenever you want")
+    print("Unlocking dragons, this may take a while but you can quit whenever you want")
     for i in range(0, 20):
         complete_games(10)
         # aquire_eggs("common", 9)
