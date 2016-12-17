@@ -139,17 +139,17 @@ def equip_character(character):
 
 
 def acquire_sidekicks():
-    print("\nAQUIRING SIDEKICKS\n")
+    print("\nACQUIRING SIDEKICKS\n")
     if debug:
         delete_extra_sidekicks(get_item_class("sidekick"))
     print("Unlocking dragons")
-    num_rounds = 200
+    num_rounds = 20
     for i in range(0, num_rounds):
         print("Round " + str(i) + " of " + str(num_rounds) + " ", end="")
         complete_games(10)
-        acquire_eggs("epic", 8)
-        acquire_dragons("legendary", 1)
-        acquire_dragons("rare", 1)
+        acquire_eggs("epic", 80)
+        acquire_dragons("legendary", 8)
+        acquire_dragons("rare", 8)
         print(" DONE")
     print("Evolving dragons")
     for i in range(0, 3):
