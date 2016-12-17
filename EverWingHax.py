@@ -71,7 +71,7 @@ INSTRUCTIONS
 
     print("\nHAX FINISHED\n")
 
-    print("Refresh page or play another round to see results in game.")
+    print("Refresh page or play another round to see results reflected in game.")
     return 0
 
 
@@ -134,15 +134,18 @@ def equip_character(character):
 
 def acquire_sidekicks():
     print("\nAQUIRING SIDEKICKS\n")
-    print("Unlocking a ton of dragons")
+    if debug:
+        print("Deleting current sidekicks")
+        delete_extra_sidekicks(get_item_class("sidekick"))
+    print("Unlocking a ton of dragons, this may take a while but you can quit whenever you want")
     for i in range(0, 20):
-        complete_games(100)
+        complete_games(10)
         # aquire_eggs("common", 9)
         # aquire_dragons("common", 7)
         # aquire_dragons("rare", 2)
-        aquire_eggs("epic", 80)
+        aquire_eggs("epic", 83)
         aquire_dragons("rare", 10)
-        aquire_dragons("legendary", 8)
+        aquire_dragons("legendary", 9)
         level_up_sidekicks()
         evolve_sidekicks()
 
@@ -183,7 +186,8 @@ def aquire_dragons(rarity, num_dragons):
 
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
-    sidekicks = [sidekick for sidekick in sidekicks if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
+    sidekicks = [sidekick for sidekick in sidekicks
+        if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")]
     print("Leveling up " + str(len(sidekicks)) + " sidekicks")
     for i in range(0, int((len(sidekicks) +1)/ 2)):
         equip_sidekicks(sidekicks[i], sidekicks[len(sidekicks) - 1 - i])
@@ -232,16 +236,15 @@ def evolve_sidekicks(cull_extra=False):
     print(" DONE")
 
     if cull_extra:
-        print("Cleaning up evoluton leftovers")
-        extra_sidekicks = [sidekick for sidekick in sidekicks
+        delete_extra_sidekicks()
+
+
+def delete_extra_sidekicks(sidekicks):
+    extra_sidekicks = [sidekick for sidekick in sidekicks
         if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")
         or get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")
         or get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
-        delete_sidekicks(extra_sidekicks)
-
-
-def delete_sidekicks(sidekicks):
-    print("Deleting " + str(len(sidekicks)) + " sidekicks")
+    print("Deleting " + str(len(sidekicks)) + " leftover sidekicks")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_sell_dragon")
     for i in range(0, len(sidekicks)):

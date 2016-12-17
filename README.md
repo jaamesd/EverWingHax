@@ -21,7 +21,7 @@
 #Instructions
 
 0. This script is now compatible with both Python 2 and 3. You can [get it here](https://www.python.org/downloads/) if you don't have it already.
-1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file and run it. You should see what's basically the same instuctions as below followed by a profile URL prompt.
+1. Download [EverWingHax](https://raw.githubusercontent.com/isometric/EverWingHax/master/EverWingHax.py) python file and [run it](http://pythoncentral.io/execute-python-script-file-shell/). You should see what's basically the same instuctions as below followed by a profile URL prompt.
 2. Open Google Chrome (desktop)
 3. In Chrome, open a messenger.com tab. Do not start the game yet.
 4. In that tab, Open Devloper Tools via Menu > More Tools > Developer Tools.
