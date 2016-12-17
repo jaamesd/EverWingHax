@@ -82,7 +82,7 @@ INSTRUCTIONS
 
 
 def acquire_characters():
-    print("\nAQUIRING CHARACTERS\n")
+    print("\nACQUIRING CHARACTERS\n")
     characters = get_item_class("character")
     for character in characters:
         character_name = character["model"].replace("character:", "")
@@ -104,7 +104,7 @@ def acquire_characters():
                 print(":", end="")
                 sys.stdout.flush()
         print(" DONE")
-    print("\nCHARACTERS acquireD\n\n")
+    print("\nCHARACTERS ACQUIRED\n\n")
 
 
 def equip_character(character):
@@ -141,18 +141,15 @@ def equip_character(character):
 def acquire_sidekicks():
     print("\nAQUIRING SIDEKICKS\n")
     if debug:
-        print("Deleting current sidekicks")
         delete_extra_sidekicks(get_item_class("sidekick"))
     print("Unlocking dragons")
-    num_rounds = 20
+    num_rounds = 200
     for i in range(0, num_rounds):
         print("Round " + str(i) + " of " + str(num_rounds) + " ", end="")
-        complete_games(1)
-        for j in range (0, 8):
-            complete_games(1)
-            acquire_eggs("epic", 1)
-            acquire_dragons("rare", 1)
-            acquire_dragons("legendary", 1)
+        complete_games(10)
+        acquire_eggs("epic", 8)
+        acquire_dragons("legendary", 1)
+        acquire_dragons("rare", 1)
         print(" DONE")
     print("Evolving dragons")
     for i in range(0, 3):
@@ -162,7 +159,7 @@ def acquire_sidekicks():
 
 
 def acquire_eggs(rarity, num_eggs):
-    if num_eggs > 1:
+    if debug:
         print("acquire " + str(num_eggs) + " " + rarity + " eggs ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
@@ -174,13 +171,12 @@ def acquire_eggs(rarity, num_eggs):
         elif i % 2:
             print(":", end="")
             sys.stdout.flush()
-    if num_eggs > 1:
-        update_world()
+    if debug:
         print(" DONE")
 
 
 def acquire_dragons(rarity, num_dragons):
-    if num_dragons > 1:
+    if debug:
         print("acquiring " + str(num_dragons) + " " + rarity + " dragons ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
@@ -188,8 +184,8 @@ def acquire_dragons(rarity, num_dragons):
         submit_event(event, update_world=(num_dragons == 1))
         print(".", end="")
         sys.stdout.flush()
-    if num_dragons > 1:
-        update_world()
+    update_world()
+    if debug:
         print(" DONE")
 
 
@@ -260,12 +256,13 @@ def delete_extra_sidekicks(sidekicks):
     for i in range(0, len(sidekicks)):
         event["sidekick"] = sidekicks[i]["key"]
         submit_event(event, update_world=False)
-        if len(sidekicks) <= 40:
+        if len(sidekicks) <= 40 or len (sidekicks) > 100:
             print(".", end="")
             sys.stdout.flush()
         elif i % 2:
             print(":", end="")
             sys.stdout.flush()
+    print(" DONE")
     update_world()
 
 
@@ -305,7 +302,7 @@ def equip_sidekicks(new_left, new_right):
 
 
 def complete_games(num_games):
-    if debug or num_games > 1:
+    if debug:
         print("Farming " + str(num_games) + " Rounds ", end="")
     sidekicks = get_item_class("sidekick")
     curr_left = next((sidekick for sidekick in sidekicks if sidekick["state"] == "equippedLeft"), None)
@@ -331,7 +328,7 @@ def complete_games(num_games):
         elif i % 2:
             print(":", end="")
             sys.stdout.flush()
-    if debug or num_games > 1:
+    if debug:
         print(" DONE")
 
 
