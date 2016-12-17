@@ -18,7 +18,14 @@ except NameError:
     pass
 
 def main():
-    print("""\
+    global debug
+    debug = False
+    global profile_url
+    profile_url = None
+    global query_endpoint
+    query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
+
+    print("""
 
 
 
@@ -27,8 +34,18 @@ def main():
        |   \ \ /  __/ |    \ \  \ /   | |   | (   |   ___ | (   | `  <
       _____|\_/ \___|_|     \_/\_/   _|_|  _|\__, |  _|  _|\__,_| _/\_\\
                                              |___/
-                                                      by andromeduck
-INSTRUCTIONS
+                                                      by andromeduck""")
+
+    for i in range(0, len(sys.argv)):
+        if "stormcloud-146919.appspot.com/auth" in sys.argv[i]:
+            profile_url = sys.argv[i]
+            profile_url = profile_url.replace("https", "http")
+        if "debug" in sys.argv[i]:
+            print("DEBUG MODE")
+            debug = True
+
+    if profile_url == None and not debug:
+        print("""INSTRUCTIONS
 
   1. Open Google Chrome (desktop)
   2. In Chrome, open a messenger.com tab. Do not start the game yet.
@@ -39,25 +56,8 @@ INSTRUCTIONS
   6. In the messenger.com tab, start EverWing. You should now should see a new
      entry in Developer Tools starting with "?uid=" and followed by numbers.
   7. In Developer Tools, right click it and select Copy > Copy Link Address.
-  8. Paste it in the prompt below.
-    """)
-    global debug
-    debug = False
-    global profile_url
-    profile_url = None
-    global query_endpoint
-    query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
-
-    for i in range(0, len(sys.argv)):
-        if "stormcloud-146919.appspot.com/auth" in sys.argv[i]:
-            profile_url = sys.argv[i]
-            profile_url = profile_url.replace("https", "http")
-        if "debug" in sys.argv[i]:
-            print("DEBUG MODE")
-            debug = True
-
-    if debug == False and profile_url == None:
-        profile_url = input("Profile URL:\n")
+  8. Paste it in the prompt below.""")
+        profile_url = input("\nProfile URL:\n")
         profile_url = profile_url.replace("https", "http")
     elif profile_url == None:
         profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
