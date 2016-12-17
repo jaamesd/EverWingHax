@@ -166,7 +166,7 @@ def acquire_eggs(rarity, num_eggs):
     event["l"] = get_func_key("listing_" + rarity + "_dragon_egg")
     for i in range(0, num_eggs):
         submit_event(event, update_world=(num_eggs == 1))
-        print(":", end="")
+        print(".", end="")
         sys.stdout.flush()
     if debug:
         print(" DONE")
