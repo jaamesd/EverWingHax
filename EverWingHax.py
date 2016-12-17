@@ -201,9 +201,9 @@ def evolve_sidekicks(cull_extra=False):
         and get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")]
     print("Attempting to Evolve " + str(len(evolution_candidates)) + " of " + str(len(sidekicks)) + " sidekicks ", end="")
     if cull_extra:
-        print(" deleting unmatched sidekicks")
+        print("deleting unmatched sidekicks")
     else:
-        print(" skipping unmatched sidekicks")
+        print("skipping unmatched sidekicks")
     while (len(evolution_candidates)):
         event = {"k": get_func_key("player_key")}
         match_target = evolution_candidates[0]
