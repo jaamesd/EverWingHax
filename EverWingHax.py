@@ -12,6 +12,10 @@ except ImportError:
     from urllib import urlencode
     from urllib2 import urlopen, Request, HTTPError
 
+try:
+    input = raw_input
+except NameError:
+    pass
 
 def main():
     print("""\
@@ -47,16 +51,19 @@ INSTRUCTIONS
     for i in range(0, len(sys.argv)):
         if "stormcloud-146919.appspot.com/auth" in sys.argv[i]:
             profile_url = sys.argv[i]
+            profile_url = profile_url.replace("https", "http")
         if "debug" in sys.argv[i]:
             print("DEBUG MODE")
             debug = True
 
     if debug == False and profile_url == None:
         profile_url = input("Profile URL:\n")
+        profile_url = profile_url.replace("https", "http")
     elif profile_url == None:
         profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
         print("\nUSING DEBUG URL")
         print(profile_url)
+
 
     print("\n\nSTARTING HAX\n")
 
@@ -139,7 +146,7 @@ def acquire_sidekicks():
     print("Unlocking dragons")
     num_rounds = 3
     for i in range(0, num_rounds):
-        print("Round " + str(i) + " of " + str(num_rounds), end="")
+        print("Round " + str(i) + " of " + str(num_rounds) + " ", end="")
         complete_games(1)
         for j in range (0, 8):
             complete_games(1)
