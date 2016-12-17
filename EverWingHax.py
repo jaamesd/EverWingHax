@@ -145,7 +145,7 @@ def acquire_sidekicks():
     print("Unlocking dragons")
     num_rounds = 20
     for i in range(0, num_rounds):
-        print("Round " + str(i) + " of " + str(num_rounds) + " ", end="")
+        print("Round " + str(i+1) + " of " + str(num_rounds) + " ", end="")
         complete_games(10)
         acquire_eggs("epic", 80)
         acquire_dragons("legendary", 8)
