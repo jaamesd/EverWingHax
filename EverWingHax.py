@@ -144,7 +144,7 @@ def acquire_sidekicks():
         print("Deleting current sidekicks")
         delete_extra_sidekicks(get_item_class("sidekick"))
     print("Unlocking dragons")
-    num_rounds = 3
+    num_rounds = 20
     for i in range(0, num_rounds):
         print("Round " + str(i) + " of " + str(num_rounds) + " ", end="")
         complete_games(1)
