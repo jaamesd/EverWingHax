@@ -238,15 +238,11 @@ def delete_extra_sidekicks(sidekicks):
     print("Deleting " + str(len(sidekicks)) + " leftover sidekicks ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_sell_dragon")
-    for i in range(0, len(sidekicks)):
-        event["sidekick"] = sidekicks[i]["key"]
+    for sidekick in extra_sidekicks:
+        event["sidekick"] = sidekick["key"]
         submit_event(event, update_world=False)
-        if len(sidekicks) <= 40 or len (sidekicks) > 100:
-            print(".", end="")
-            sys.stdout.flush()
-        elif i % 2:
-            print(":", end="")
-            sys.stdout.flush()
+        print(".", end="")
+        sys.stdout.flush()
     print(" DONE")
     update_world()
 
