@@ -155,7 +155,7 @@ def acquire_sidekicks():
     for i in range(0, 3):
         level_up_sidekicks()
         evolve_sidekicks()
-    delete_extra_sidekicks()
+    delete_extra_sidekicks(get_item_class("sidekick"))
     print("\nSIDEKICKS ACQUIRED\n\n")
 
 
