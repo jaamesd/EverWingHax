@@ -154,6 +154,9 @@ def acquire_sidekicks():
         acquire_dragons("legendary", 8)
         acquire_dragons("rare", 8)
         print(" DONE")
+        if i % 4:
+            level_up_sidekicks()
+            evolve_sidekicks()
     print("Evolving dragons")
     for i in range(0, 3):
         level_up_sidekicks()
