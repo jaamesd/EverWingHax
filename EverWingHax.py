@@ -24,6 +24,7 @@ def main():
     profile_url = None
     global query_endpoint
     query_endpoint = "http://stormcloud-146919.appspot.com/purchase/listing/?"
+    debug_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
 
     print("""
 
@@ -40,7 +41,10 @@ def main():
         if "stormcloud-146919.appspot.com/auth" in sys.argv[i]:
             profile_url = sys.argv[i]
             profile_url = profile_url.replace("https", "http")
-        if "debug" in sys.argv[i]:
+        elif "debug_url" in sys.argv[i]:
+            print("DEBUG URL")
+            profile_url = debug_url
+        elif "debug" in sys.argv[i]:
             print("DEBUG MODE")
             debug = True
 
@@ -60,7 +64,7 @@ def main():
         profile_url = input("\nProfile URL:\n")
         profile_url = profile_url.replace("https", "http")
     elif profile_url == None:
-        profile_url = "http://stormcloud-146919.appspot.com/auth/connect/?uid=1141161145996839&"
+        profile_url = debug_url
         print("\nUSING DEBUG URL")
         print(profile_url)
 
@@ -141,7 +145,7 @@ def equip_character(character):
 def acquire_sidekicks():
     print("\nACQUIRING SIDEKICKS\n")
     if debug:
-        delete_extra_sidekicks(get_item_class("sidekick"))
+        delete_extra_sidekicks(delete_all=True)
     print("Unlocking dragons")
     if debug:
         num_rounds = 5
@@ -157,10 +161,10 @@ def acquire_sidekicks():
             level_up_sidekicks()
             evolve_sidekicks()
     print("Evolving dragons")
-    for i in range(0, 3):
+    for i in range(0, 4):
         level_up_sidekicks()
         evolve_sidekicks()
-    delete_extra_sidekicks(get_item_class("sidekick"))
+    delete_extra_sidekicks()
     print("\nSIDEKICKS ACQUIRED\n\n")
 
 
@@ -235,12 +239,16 @@ def evolve_sidekicks():
     print(" DONE")
 
 
-def delete_extra_sidekicks(sidekicks):
-    extra_sidekicks = [sidekick for sidekick in sidekicks
-        if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")
-        or get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")
-        or get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
-    print("Deleting " + str(len(sidekicks)) + " leftover sidekicks ", end="")
+def delete_extra_sidekicks(delete_all=False):
+    sidekicks = get_item_class("sidekick")
+    if delete_all:
+        extra_sidekicks = sidekicks
+    else:
+        extra_sidekicks = [sidekick for sidekick in sidekicks
+            if get_stat(sidekick, "xp", "value") != get_stat(sidekick, "xp", "maximum")
+            or get_stat(sidekick, "maturity", "value") != get_stat(sidekick, "maturity", "maximum")
+            or get_stat(sidekick, "zodiac_bonus", "value") != get_stat(sidekick, "zodiac_bonus", "maximum")]
+    print("Deleting " + str(len(extra_sidekicks)) + " leftover sidekicks ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key("listing_sell_dragon")
     for sidekick in extra_sidekicks:
