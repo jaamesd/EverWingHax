@@ -152,7 +152,6 @@ def acquire_sidekicks():
         complete_games(10)
         acquire_eggs("epic", 80)
         acquire_dragons("legendary", 8)
-        acquire_dragons("rare", 8)
         print(" DONE")
         if i % 4:
             level_up_sidekicks()
