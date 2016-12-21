@@ -60,7 +60,7 @@ def main():
   6. In the messenger.com tab, start EverWing. You should now should see a new
      entry in Developer Tools starting with "?uid=" and followed by numbers.
   7. In Developer Tools, right click it and select Copy > Copy Link Address.
-  8. Paste it in the prompt below.""")
+  8. Paste it in the prompt below, hit return, then wait for it to complete.""")
         profile_url = input("\nProfile URL:\n")
         profile_url = profile_url.replace("https", "http")
     elif profile_url == None:
@@ -82,6 +82,9 @@ def main():
     print("\nHAX FINISHED\n")
 
     print("Refresh page or play another round to see results reflected in game.")
+
+    if sys.platform == "win32":
+        raw_input("hit return to exit")
 
     return 0
 
