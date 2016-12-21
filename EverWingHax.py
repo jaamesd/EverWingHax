@@ -60,7 +60,7 @@ def main():
   6. In the messenger.com tab, start EverWing. You should now should see a new
      entry in Developer Tools starting with "?uid=" and followed by numbers.
   7. In Developer Tools, right click it and select Copy > Copy Link Address.
-  8. Paste it in the prompt below.""")
+  8. Paste it in the prompt below, hit return, then wait for it to complete.""")
         profile_url = input("\nProfile URL:\n")
         profile_url = profile_url.replace("https", "http")
     elif profile_url == None:
@@ -82,6 +82,10 @@ def main():
     print("\nHAX FINISHED\n")
 
     print("Refresh page or play another round to see results reflected in game.")
+
+    if sys.platform == "win32":
+        raw_input("hit return to exit")
+
     return 0
 
 
@@ -144,12 +148,19 @@ def equip_character(character):
 
 def acquire_sidekicks():
     print("\nACQUIRING SIDEKICKS\n")
+    sidekicks = get_item_class("sidekick")
     if debug:
+        print("Debug Mode, deleting all dragons and running 8/20 unlock rounds")
         delete_extra_sidekicks(delete_all=True)
-    print("Unlocking dragons")
-    if debug:
-        num_rounds = 5
+        num_rounds = 8
+    elif len(sidekicks) > 100:
+        print("Lots of dragons found, running only 12/20 unlock rounds")
+        for i in range(0, 4):
+            level_up_sidekicks()
+            evolve_sidekicks()
+        num_rounds = 12
     else:
+        print("Unlocking dragons")
         num_rounds = 20
     for i in range(0, num_rounds):
         print("Round " + str(i+1) + " of " + str(num_rounds) + " ", end="")
@@ -157,7 +168,7 @@ def acquire_sidekicks():
         acquire_eggs("epic", 80)
         acquire_dragons("legendary", 8)
         print(" DONE")
-        if i % 4:
+        if i % 4 == 0:
             level_up_sidekicks()
             evolve_sidekicks()
     print("Evolving dragons")
