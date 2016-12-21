@@ -365,23 +365,21 @@ def submit_event(query_data, update_world=True, retries_left=2):
     try:
         query_url = query_endpoint + urlencode(query_data)
         response = urlopen(query_url, timeout=4).read().decode("utf-8")
-    except socket.timeout as e:
-        if debug:
-            print("WARNING timed out on query:", query_url)
+    except HTTPError as e:
+        if debug or retries_left <= 0:
+            print(str(e))
+            response = e.read().decode("utf-8")
+        else:
+            submit_event(query_data, update_world, retries_left-1)
+        return
+    except Exception as e:
+        if debug or retries_left <= 0:
+            print("ERROR exhausted retries on query:", query_url)
+            print(str(e))
         else:
             print("!", end ="")
-        if retries_left > 0:
-            retries_left -= 1
-            submit_event(query_data, update_world, retries_left)
-        else:
-            if debug:
-                print("ERROR exceeded timeout retries on query:", query_url)
-            else:
-                print("!", end ="")
-            return
-    except HTTPError as e:
-        print(str(e))
-        response = e.read().decode("utf-8")
+            submit_event(query_data, update_world, retries_left-1)
+        return
 
     if "error" in response:
         if debug:
