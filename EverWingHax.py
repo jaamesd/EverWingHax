@@ -350,10 +350,24 @@ def update_world():
         exit(1)
 
 
-def submit_event(query_data, update_world=True):
+def submit_event(query_data, update_world=True, retries_left=2):
     try:
         query_url = query_endpoint + urlencode(query_data)
-        response = urlopen(query_url).read().decode("utf-8")
+        response = urlopen(query_url, timeout=4).read().decode("utf-8")
+    except socket.timeout as e:
+        if debug:
+            print("WARNING timed out on query:", query_url)
+        else:
+            print("!", end ="")
+        if retries_left > 0:
+            retries_left -= 1
+            submit_event(query_data, update_world, retries_left)
+        else:
+            if debug:
+                print("ERROR exceeded timeout retries on query:", query_url)
+            else:
+                print("!", end ="")
+            return
     except HTTPError as e:
         print(str(e))
         response = e.read().decode("utf-8")
@@ -374,7 +388,6 @@ def submit_event(query_data, update_world=True):
             world["player"]["wallet"] = response["wallet"]
         if "inventory" in response:
             world["player"]["inventory"] = response["inventory"]
-    return response
 
 
 def exit_tutorial():
