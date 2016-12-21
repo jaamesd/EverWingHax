@@ -168,7 +168,7 @@ def acquire_sidekicks():
         acquire_eggs("epic", 80)
         acquire_dragons("legendary", 8)
         print(" DONE")
-        if i % 4:
+        if i % 4 == 0:
             level_up_sidekicks()
             evolve_sidekicks()
     print("Evolving dragons")
