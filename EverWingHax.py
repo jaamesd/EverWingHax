@@ -82,6 +82,7 @@ def main():
     print("\nHAX FINISHED\n")
 
     print("Refresh page or play another round to see results reflected in game.")
+
     return 0
 
 
@@ -144,12 +145,19 @@ def equip_character(character):
 
 def acquire_sidekicks():
     print("\nACQUIRING SIDEKICKS\n")
+    sidekicks = get_item_class("sidekick")
     if debug:
+        print("Debug Mode, deleting all dragons and running 8/20 unlock rounds")
         delete_extra_sidekicks(delete_all=True)
-    print("Unlocking dragons")
-    if debug:
-        num_rounds = 5
+        num_rounds = 8
+    elif len(sidekicks) > 100:
+        print("Lots of dragons found, running only 12/20 unlock rounds")
+        for i in range(0, 4):
+            level_up_sidekicks()
+            evolve_sidekicks()
+        num_rounds = 12
     else:
+        print("Unlocking dragons")
         num_rounds = 20
     for i in range(0, num_rounds):
         print("Round " + str(i+1) + " of " + str(num_rounds) + " ", end="")
