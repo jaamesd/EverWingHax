@@ -366,17 +366,18 @@ def submit_event(query_data, update_world=True, retries_left=2):
         query_url = query_endpoint + urlencode(query_data)
         response = urlopen(query_url, timeout=4).read().decode("utf-8")
     except HTTPError as e:
-        if debug or retries_left <= 0:
+        if debug:
             print(str(e))
             response = e.read().decode("utf-8")
-        else:
+        elif:
+            print("!", end ="")
             submit_event(query_data, update_world, retries_left-1)
-        return
+            return
     except Exception as e:
-        if debug or retries_left <= 0:
+        if debug:
             print("ERROR exhausted retries on query:", query_url)
             print(str(e))
-        else:
+        elif or retries_left > 0:
             print("!", end ="")
             submit_event(query_data, update_world, retries_left-1)
         return
