@@ -369,7 +369,7 @@ def submit_event(query_data, update_world=True, retries_left=2):
         if debug:
             print(str(e))
             response = e.read().decode("utf-8")
-        elif:
+        else:
             print("!", end ="")
             submit_event(query_data, update_world, retries_left-1)
             return
