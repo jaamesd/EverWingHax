@@ -377,7 +377,7 @@ def submit_event(query_data, update_world=True, retries_left=2):
         if debug:
             print("ERROR exhausted retries on query:", query_url)
             print(str(e))
-        elif or retries_left > 0:
+        elif retries_left > 0:
             print("!", end ="")
             submit_event(query_data, update_world, retries_left-1)
         return
