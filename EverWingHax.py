@@ -166,7 +166,7 @@ def acquire_sidekicks():
         print("Round " + str(i+1) + " of " + str(num_rounds) + " ", end="")
         complete_games(10)
         acquire_eggs("epic", 80)
-        acquire_dragons("legendary", 8)
+        acquire_dragons("legendary")
         print(" DONE")
         if i % 4 == 0:
             level_up_sidekicks()
@@ -192,11 +192,12 @@ def acquire_eggs(rarity, num_eggs):
         print(" DONE")
 
 
-def acquire_dragons(rarity, num_dragons):
+def acquire_dragons(rarity):
     if debug:
         print("acquiring " + str(num_dragons) + " " + rarity + " dragons ", end="")
     event = {"k": get_func_key("player_key")}
     event["l"] = get_func_key(rarity + "_dragon")
+    num_dragons = acquire_dragon_balance(rarity)
     for j in range(0, num_dragons):
         submit_event(event, update_world=(num_dragons == 1))
         print(".", end="")
@@ -205,6 +206,10 @@ def acquire_dragons(rarity, num_dragons):
     if debug:
         print(" DONE")
 
+def acquire_dragon_balance(rarity):
+    update_world()
+    return [item["balance"] for item in world["player"]["wallet"] if rarity in item["model"]][0]
+    
 
 def level_up_sidekicks():
     sidekicks = get_item_class("sidekick")
